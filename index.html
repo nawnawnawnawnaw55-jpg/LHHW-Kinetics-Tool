@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CAETANO LHHW KINETICS & GRAPHS</title>
+    
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%234ade80' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M8 2v20h8V2H8z'/><path d='M8 6h8'/><path d='M8 10h8'/><path d='M8 14h8'/><path d='M8 18h8'/><path d='M4 14h4'/><path d='M16 6h4'/></svg>">
+    
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+
+    <style>
+        :root {
+            --bg-color: #1a1a1a;
+            --text-color: #e0e0e0;
+            --accent-green: #4ade80;
+            --pastel-pink: #fbcfe8;
+            --pink-hover: #f9a8d4;
+            --input-bg: #2d2d2d;
+            --scrollbar-gray: #555555;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px; 
+            margin: 0;
+            min-height: 100vh;
+            box-sizing: border-box;
+            overflow-y: auto; 
+        }
+
+        .container { 
+            width: 100%; 
+            max-width: 900px; 
+            display: flex; 
+            flex-direction: column; 
+            background-color: var(--bg-color);
+            position: relative;
+        }
+
+        .title-group { display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 20px; }
+        .title-icon { width: 32px; height: 32px; stroke: var(--accent-green); }
+        h2 { color: var(--accent-green); margin: 0; text-transform: uppercase; letter-spacing: 3px; font-weight: 900; }
+
+        .tabs { display: flex; border-bottom: 2px solid var(--input-bg); margin-bottom: 20px; }
+        .tab-btn { background: transparent; color: var(--scrollbar-gray); border: none; padding: 10px 20px; font-size: 14px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: all 0.3s; border-bottom: 3px solid transparent; }
+        .tab-btn:hover { color: var(--pastel-pink); }
+        .tab-btn.active { color: var(--accent-green); border-bottom: 3px solid var(--accent-green); }
+
+        .tab-content { display: none; animation: fadeIn 0.4s; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        .grid-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .input-wrapper { display: flex; flex-direction: column; }
+        
+        .label-row { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 8px; }
+        .label-left { display: flex; align-items: center; }
+        .label-text { font-size: 12px; color: var(--accent-green); font-weight: bold; letter-spacing: 1px; display: inline; text-transform: uppercase;}
+        .label-text sub { font-size: 9px; vertical-align: bottom; margin-left: 1px; text-transform: none; }
+        .hint { font-size: 10px; color: #888; font-weight: normal; margin-bottom: 2px;}
+
+        .styled-input { width: 100%; background-color: var(--input-bg); border: 2px solid var(--accent-green); border-radius: 8px; color: white; padding: 15px; font-family: 'Consolas', monospace; font-size: 14px; outline: none; box-sizing: border-box; transition: border-color 0.3s ease; }
+        .styled-input:focus { border-color: var(--pastel-pink); box-shadow: 0 0 10px rgba(251, 207, 232, 0.2); }
+
+        .toggle-btn { background: transparent; border: 1px solid var(--pastel-pink); color: var(--pastel-pink); font-size: 10px; padding: 3px 8px; cursor: pointer; border-radius: 4px; text-transform: uppercase; font-weight: bold; transition: all 0.2s; margin-left: 10px;}
+        .toggle-btn:hover { background: var(--pastel-pink); color: var(--bg-color); }
+
+        /* --- TOOLTIP CSS --- */
+        .tooltip { position: relative; display: inline-flex; align-items: center; justify-content: center; width: 14px; height: 14px; background-color: transparent; border: 1px solid var(--pastel-pink); color: var(--pastel-pink); border-radius: 4px; font-size: 10px; font-weight: bold; cursor: help; margin-left: 8px; font-family: sans-serif; text-transform: none; letter-spacing: 0; }
+        .tooltip.out-tip { border-color: var(--accent-green); color: var(--accent-green); }
+        .tooltip .tooltiptext { visibility: hidden; width: 220px; background-color: var(--bg-color); color: #fff; text-align: left; border-radius: 6px; padding: 10px; position: absolute; z-index: 100; bottom: 150%; left: 50%; transform: translateX(-50%); border: 1px solid var(--pastel-pink); font-size: 11px; font-weight: normal; opacity: 0; transition: opacity 0.2s; box-shadow: 0 5px 15px rgba(0,0,0,0.8); line-height: 1.4; pointer-events: none; }
+        .tooltip.out-tip .tooltiptext { border-color: var(--accent-green); }
+        .tooltip .tooltiptext::after { content: ""; position: absolute; top: 100%; left: 50%; margin-left: -5px; border-width: 5px; border-style: solid; border-color: var(--pastel-pink) transparent transparent transparent; }
+        .tooltip.out-tip .tooltiptext::after { border-color: var(--accent-green) transparent transparent transparent; }
+        .tooltip:hover .tooltiptext { visibility: visible; opacity: 1; }
+
+        /* --- COPYABLE TEXT CSS --- */
+        .copyable { cursor: pointer; transition: opacity 0.2s; border-bottom: 1px dashed transparent; display: inline-block;}
+        .copyable:hover { opacity: 0.7; border-bottom: 1px dashed currentColor; }
+
+        .output-box { background-color: var(--input-bg); border: 2px dashed var(--pastel-pink); border-radius: 12px; padding: 20px; margin-top: 20px; }
+        .output-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-family: 'Consolas', monospace; }
+        .output-row:last-child { border-bottom: none; }
+        .out-label { color: var(--text-color); font-size: 13px; font-weight: bold; display: flex; align-items: center;}
+        
+        .out-value-container { display: flex; align-items: center; gap: 8px; }
+        .out-value { color: var(--accent-green); font-size: 16px; font-weight: bold; }
+        .out-rate { color: var(--pastel-pink); font-size: 22px; font-weight: 900; }
+        .unit-text { font-size: 12px; color: #888; }
+
+        .graph-container { width: 100%; height: 400px; margin-bottom: 20px; border-radius: 8px; overflow: hidden; border: 1px solid var(--input-bg); }
+
+        details { margin-top: 20px; background-color: var(--input-bg); border: 1px solid var(--scrollbar-gray); border-radius: 8px; padding: 15px; }
+        summary { color: var(--accent-green); font-weight: bold; text-transform: uppercase; font-size: 12px; cursor: pointer; letter-spacing: 1px; outline: none; }
+        .math-content { margin-top: 15px; font-size: 14px; color: #ccc; overflow-x: auto; }
+
+        /* ASPEN GUIDE STYLES */
+        .aspen-section { margin-bottom: 30px; }
+        .aspen-section-title { color: white; border-bottom: 2px solid var(--scrollbar-gray); padding-bottom: 8px; margin-bottom: 15px; font-size: 18px; text-transform: uppercase; letter-spacing: 1px; }
+        .aspen-card { background-color: var(--input-bg); padding: 20px; border-radius: 8px; border-left: 4px solid var(--pastel-pink); margin-bottom: 15px;}
+        .aspen-title { color: var(--pastel-pink); font-size: 14px; font-weight: bold; margin-bottom: 10px; text-transform: uppercase;}
+        .aspen-code { font-family: 'Consolas', monospace; color: var(--accent-green); font-size: 13px; margin-bottom: 8px; background: rgba(74, 222, 128, 0.1); padding: 5px 10px; border-radius: 4px; display: inline-block;}
+        .aspen-list { font-size: 13px; color: #e0e0e0; line-height: 1.8; margin-top: 5px; padding-left: 20px; }
+        .aspen-val { color: var(--accent-green); font-weight: bold; }
+        .aspen-instruction { font-size: 13px; color: #ccc; margin-bottom: 10px; line-height: 1.5; }
+        .aspen-path { font-family: 'Consolas', monospace; background: #111; padding: 3px 6px; border-radius: 4px; color: var(--pastel-pink); font-size: 12px; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="title-group">
+            <svg class="title-icon" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v20h8V2H8z"/><path d="M8 6h8"/><path d="M8 10h8"/><path d="M8 14h8"/><path d="M8 18h8"/><path d="M4 14h4"/><path d="M16 6h4"/></svg>
+            <h2>LHHW KINETICS TOOL</h2>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('calc')">Point Calculator</button>
+            <button class="tab-btn" onclick="switchTab('graphs')">Interactive Graphs</button>
+            <button class="tab-btn" onclick="switchTab('aspen')">Detailed Aspen Guide</button>
+        </div>
+
+        <div id="tab-calc" class="tab-content active">
+            <div class="grid-layout">
+                <div class="input-wrapper">
+                    <div class="label-row">
+                        <div class="label-left">
+                            <span class="label-text">Temperature</span>
+                            <div class="tooltip">?<span class="tooltiptext">The operating temperature at a specific physical point in the reactor. Higher temps increase forward rate (k) but lower equilibrium conversion.</span></div>
+                            <button class="toggle-btn" id="unitToggle" onclick="toggleTemp()">Using: °C</button>
+                        </div>
+                    </div>
+                    <input type="number" id="temp" class="styled-input" value="60" oninput="updateAll()">
+                </div>
+                <div class="input-wrapper">
+                    <div class="label-row">
+                        <div class="label-left">
+                            <span class="label-text">C<sub>MeOH</sub></span>
+                            <div class="tooltip">?<span class="tooltiptext">The molar concentration of Methanol at this specific point in the catalyst bed. Highly polar; strongly adsorbs to Amberlyst-15 sites.</span></div>
+                        </div>
+                        <span class="hint">(kmol/m³ or mol/L)</span>
+                    </div>
+                    <input type="number" id="c_meoh" class="styled-input" value="1.5" oninput="updateAll()">
+                </div>
+                <div class="input-wrapper">
+                    <div class="label-row">
+                        <div class="label-left">
+                            <span class="label-text">C<sub>iC4</sub></span>
+                            <div class="tooltip">?<span class="tooltiptext">The molar concentration of Isobutene at this exact point in the reactor. Other C4s (like n-butane) are considered inert.</span></div>
+                        </div>
+                        <span class="hint">(kmol/m³ or mol/L)</span>
+                    </div>
+                    <input type="number" id="c_ic4" class="styled-input" value="1.5" oninput="updateAll()">
+                </div>
+                <div class="input-wrapper">
+                    <div class="label-row">
+                        <div class="label-left">
+                            <span class="label-text">C<sub>MTBE</sub></span>
+                            <div class="tooltip">?<span class="tooltiptext">The concentration of product at this point. As this builds up further down the reactor, it pushes the equilibrium backward.</span></div>
+                        </div>
+                        <span class="hint">(kmol/m³ or mol/L)</span>
+                    </div>
+                    <input type="number" id="c_mtbe" class="styled-input" value="0.2" oninput="updateAll()">
+                </div>
+            </div>
+
+            <div class="output-box">
+                <div class="output-row">
+                    <span class="out-label">Aspen Reaction Rate (r)
+                        <div class="tooltip out-tip">?<span class="tooltiptext">The instantaneous reaction speed right at the point where these concentrations exist. Formatted for Aspen LHHW input units.</span></div>
+                    </span>
+                    <div class="out-value-container">
+                        <span class="out-rate copyable" id="out_r_aspen" onclick="copyVal(this)" title="Click to copy exact standard value">0.0000</span>
+                        <span class="unit-text">kmol / (kg<sub>cat</sub> &middot; hr)</span>
+                    </div>
+                </div>
+                <div class="output-row">
+                    <span class="out-label">Caetano Forward Rate Const (k)
+                        <div class="tooltip out-tip">?<span class="tooltiptext">The forward kinetic rate constant calculated using the Arrhenius equation. Driven entirely by Temperature.</span></div>
+                    </span>
+                    <div class="out-value-container">
+                        <span class="out-value copyable" id="out_k" onclick="copyVal(this)" title="Click to copy exact standard value">0.0000</span>
+                    </div>
+                </div>
+                <div class="output-row">
+                    <span class="out-label">Adsorption Ratio (D)
+                        <div class="tooltip out-tip">?<span class="tooltiptext">The lumped parameter accounting for MTBE actively competing with Methanol for physical space on the catalyst sites.</span></div>
+                    </span>
+                    <div class="out-value-container">
+                        <span class="out-value copyable" id="out_d" onclick="copyVal(this)" title="Click to copy exact standard value">0.0000</span>
+                    </div>
+                </div>
+                <div class="output-row">
+                    <span class="out-label">Equilibrium Const (K<sub>eq</sub>)
+                        <div class="tooltip out-tip">?<span class="tooltiptext">The thermodynamic limit of the reaction calculated via Van't Hoff. Because MTBE synthesis is exothermic, Keq drops as temp rises.</span></div>
+                    </span>
+                    <div class="out-value-container">
+                        <span class="out-value copyable" id="out_keq" onclick="copyVal(this)" title="Click to copy exact standard value">0.0000</span>
+                    </div>
+                </div>
+            </div>
+
+            <details>
+                <summary>View Caetano (1994) Mathematical Model</summary>
+                <div class="math-content">
+                    <p><strong>Overall Rate (Rideal-Eley):</strong></p>
+                    <p>$$ r = k \frac{C_{iC4} C_{MeOH} - (C_{MTBE} / K_{eq})}{C_{MeOH} + D \cdot C_{MTBE}} $$</p>
+                    <p><strong>Constants (from Caetano 1994):</strong></p>
+                    <p>$$ k = 8.97 \times 10^{20} \exp\left(\frac{-15660}{T}\right) $$</p>
+                    <p>$$ D = 1.168 \times 10^{10} \exp\left(\frac{-9241.7}{T}\right) $$</p>
+                </div>
+            </details>
+        </div>
+
+        <div id="tab-graphs" class="tab-content">
+            <p style="font-size: 12px; color: var(--scrollbar-gray); margin-top: 0;">Hover over the plot lines for a vertical trace. <strong>Zoom in by dragging a box over the graph to dynamically generate highly granular data points within that view.</strong> Double-click to zoom out.</p>
+            
+            <div id="plot_temp" class="graph-container"></div>
+            <div id="plot_mtbe" class="graph-container"></div>
+        </div>
+
+        <div id="tab-aspen" class="tab-content">
+            <p class="aspen-instruction">This guide details exactly how to map the Caetano (1994) LHHW kinetics for Amberlyst-15 into your Aspen Plus RadFrac column. <em>(Click any green value to copy it to your clipboard)</em>.</p>
+            
+            <div class="aspen-section">
+                <div class="aspen-section-title">Phase 1: Global Reaction Setup</div>
+                <p class="aspen-instruction">Navigate to the main Data Browser: <span class="aspen-path">Reactions &rarr; Reactions &rarr; New</span>. Select <strong>LHHW</strong> as the reaction type. Name it <code>MTBE-K</code>.</p>
+                <div class="aspen-card">
+                    <div class="aspen-title">Stoichiometry Tab</div>
+                    <ul class="aspen-list">
+                        <li><strong>Reactants:</strong> ISOBUT (Coef: -1), METHANOL (Coef: -1)</li>
+                        <li><strong>Products:</strong> MTBE (Coef: 1)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="aspen-section">
+                <div class="aspen-section-title">Phase 2: LHHW Kinetic Configuration</div>
+                <p class="aspen-instruction">Navigate to <span class="aspen-path">Reactions &rarr; MTBE-K &rarr; Edit</span>. You must configure three specific tabs.</p>
+
+                <div class="aspen-card">
+                    <div class="aspen-title">1. Kinetic Tab (Forward Rate)</div>
+                    <p class="aspen-instruction">Set <strong>Reacting Phase</strong> to <code>Liquid</code> and <strong>Rate Basis</strong> to <code>Cat Weight</code>.</p>
+                    <div class="aspen-code">k = A &middot; exp(-E<sub>a</sub> / RT)</div>
+                    <ul class="aspen-list">
+                        <li><strong>k (Pre-exponential factor):</strong> <span class="aspen-val copyable" onclick="copyVal(this)" data-raw="897000000000000000000" title="Click to copy">8.97e+20</span></li>
+                        <li><strong>E<sub>a</sub> (Activation Energy):</strong> <span class="aspen-val copyable" onclick="copyVal(this)" data-raw="130200000" title="Click to copy">130200000</span> <span style="color:#888;">J/kmol</span> <em style="color:#666;">(15660 &times; 8.314 &times; 1000)</em></li>
+                    </ul>
+                </div>
+
+                <div class="aspen-card">
+                    <div class="aspen-title">2. Driving Force Tab (Numerator)</div>
+                    <p class="aspen-instruction">Set the <strong>Concentration Basis</strong> to <code>Molarity</code> (which translates to kmol/m&sup3;). Add two terms:</p>
+                    <div class="aspen-code">Term 1: [MeOH]<sup>1</sup> &middot; [iC4]<sup>1</sup></div>
+                    <div class="aspen-code">Term 2: [MTBE]<sup>1</sup> / K<sub>eq</sub></div>
+                    <ul class="aspen-list">
+                        <li>Select "Compute Keq from Gibbs free energy" so Aspen handles the thermodynamics natively.</li>
+                    </ul>
+                </div>
+
+                <div class="aspen-card">
+                    <div class="aspen-title">3. Adsorption Tab (Denominator)</div>
+                    <p class="aspen-instruction">Here you build the inhibition effect of Methanol and MTBE competing for the Amberlyst-15 active sites.</p>
+                    <div class="aspen-code">Denom = ( [MeOH] + D &middot; [MTBE] )<sup>1</sup></div>
+                    <ul class="aspen-list">
+                        <li><strong>Adsorption Exponent:</strong> <span class="aspen-val copyable" onclick="copyVal(this)" data-raw="1" title="Click to copy">1</span></li>
+                        <li><strong>Term 1 (MeOH):</strong> Add component METHANOL. Pre-exp = <span class="aspen-val copyable" onclick="copyVal(this)" data-raw="1" title="Click to copy">1</span>, E<sub>a</sub> = <span class="aspen-val copyable" onclick="copyVal(this)" data-raw="0" title="Click to copy">0</span></li>
+                        <li><strong>Term 2 (MTBE, "D"):</strong> Add component MTBE. Pre-exp = <span class="aspen-val copyable" onclick="copyVal(this)" data-raw="11680000000" title="Click to copy">1.168e+10</span>, E<sub>a</sub> = <span class="aspen-val copyable" onclick="copyVal(this)" data-raw="76835000" title="Click to copy">76835000</span> <span style="color:#888;">J/kmol</span> <em style="color:#666;">(9241.7 &times; 8.314 &times; 1000)</em></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="aspen-section">
+                <div class="aspen-section-title">Phase 3: RadFrac Column Integration</div>
+                <p class="aspen-instruction">Now apply this mathematical catalyst "fingerprint" to the physical space in your column.</p>
+                <div class="aspen-card">
+                    <div class="aspen-title">Catalyst Holdup Configuration</div>
+                    <p class="aspen-instruction">Navigate to <span class="aspen-path">Blocks &rarr; DISP &rarr; Reactions</span>.</p>
+                    <ul class="aspen-list">
+                        <li>Select <strong>Stages 4 through 11</strong> (your reactive zone).</li>
+                        <li>Attach the <code>MTBE-K</code> reaction ID you just built to these stages.</li>
+                        <li><strong>CRITICAL STEP:</strong> In the grid, locate the <strong>Holdup</strong> column. You must input the mass of Amberlyst-15 catalyst present on each stage in <strong>kg</strong>. Aspen multiplies the LHHW rate (kmol/kg-hr) by this holdup to determine the actual amount of MTBE synthesized per stage.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        let isCelsius = true;
+        let graphsInitialized = false;
+
+        const layoutConfig = {
+            paper_bgcolor: '#1a1a1a', plot_bgcolor: '#2d2d2d',
+            font: { color: '#e0e0e0' },
+            hovermode: 'x unified', 
+            xaxis: { gridcolor: '#444', zerolinecolor: '#444' },
+            yaxis: { gridcolor: '#444', zerolinecolor: '#444' },
+            margin: { l: 50, r: 20, t: 40, b: 40 }
+        };
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            
+            document.getElementById('tab-' + tabId).classList.add('active');
+            event.target.classList.add('active');
+
+            if(tabId === 'graphs') updateAll(); 
+        }
+
+        function toggleTemp() {
+            isCelsius = !isCelsius;
+            const btn = document.getElementById('unitToggle');
+            const input = document.getElementById('temp');
+            let currentVal = parseFloat(input.value);
+
+            if (!isNaN(currentVal)) {
+                if (isCelsius) {
+                    input.value = (currentVal - 273.15).toFixed(2);
+                    btn.innerText = "Using: °C";
+                } else {
+                    input.value = (currentVal + 273.15).toFixed(2);
+                    btn.innerText = "Using: K";
+                }
+            } else {
+                btn.innerText = isCelsius ? "Using: °C" : "Using: K";
+            }
+            updateAll();
+        }
+
+        function calculateKinetics(T_kelvin, C_MeOH, C_iC4, C_MTBE) {
+            const k = 8.97e20 * Math.exp(-15660 / T_kelvin);
+            const D = 1.168e10 * Math.exp(-9241.7 / T_kelvin);
+            const dH_R = -37700 / 8.314; 
+            const K_eq = 3.2 * Math.exp(dH_R * ((1/T_kelvin) - (1/343.15)));
+
+            const numerator = (C_iC4 * C_MeOH) - (C_MTBE / K_eq);
+            const denominator = C_MeOH + (D * C_MTBE);
+            
+            let r_raw = 0;
+            if (denominator > 0) r_raw = k * (numerator / denominator);
+            
+            const r_aspen = r_raw * 3600;
+            return { r_aspen, k, D, K_eq };
+        }
+
+        function updateAll() {
+            let T_input = parseFloat(document.getElementById('temp').value);
+            const C_MeOH = parseFloat(document.getElementById('c_meoh').value);
+            const C_iC4 = parseFloat(document.getElementById('c_ic4').value);
+            const C_MTBE = parseFloat(document.getElementById('c_mtbe').value);
+
+            if (isNaN(T_input) || isNaN(C_MeOH) || isNaN(C_iC4) || isNaN(C_MTBE)) return;
+            const T_K = isCelsius ? T_input + 273.15 : T_input;
+
+            const pointCalc = calculateKinetics(T_K, C_MeOH, C_iC4, C_MTBE);
+            
+            const elR = document.getElementById('out_r_aspen');
+            elR.innerText = pointCalc.r_aspen.toExponential(4);
+            elR.setAttribute('data-raw', pointCalc.r_aspen);
+
+            const elK = document.getElementById('out_k');
+            elK.innerText = pointCalc.k.toExponential(4);
+            elK.setAttribute('data-raw', pointCalc.k);
+
+            const elD = document.getElementById('out_d');
+            elD.innerText = pointCalc.D.toFixed(4);
+            elD.setAttribute('data-raw', pointCalc.D);
+
+            const elKeq = document.getElementById('out_keq');
+            elKeq.innerText = pointCalc.K_eq.toFixed(4);
+            elKeq.setAttribute('data-raw', pointCalc.K_eq);
+
+            generateGraphs(T_K, C_MeOH, C_iC4, C_MTBE);
+        }
+
+        function copyVal(element) {
+            const rawVal = element.getAttribute('data-raw');
+            if (!rawVal) return;
+
+            const formattedVal = Number(rawVal).toFixed(5);
+
+            navigator.clipboard.writeText(formattedVal).then(() => {
+                const originalText = element.innerText;
+                const originalColor = element.style.color;
+                
+                element.innerText = "COPIED!";
+                element.style.color = "var(--text-color)";
+                
+                setTimeout(() => {
+                    element.innerText = originalText;
+                    element.style.color = originalColor;
+                }, 800);
+            });
+        }
+
+        function generateDataArrays(start, end, steps, func) {
+            let x_arr = [], y_arr = [];
+            let step_size = (end - start) / steps;
+            for(let i = 0; i <= steps; i++) {
+                let x = start + (i * step_size);
+                x_arr.push(x);
+                y_arr.push(func(x));
+            }
+            return {x: x_arr, y: y_arr};
+        }
+
+        function generateGraphs(T_K, C_MeOH, C_iC4, C_MTBE) {
+            if (!document.getElementById('tab-graphs').classList.contains('active')) return;
+
+            let temp_data = generateDataArrays(20, 100, 800, (t) => calculateKinetics(t + 273.15, C_MeOH, C_iC4, C_MTBE).r_aspen);
+            let mtbe_data = generateDataArrays(0, 5, 800, (m) => calculateKinetics(T_K, C_MeOH, C_iC4, m).r_aspen);
+
+            Plotly.react('plot_temp', [{
+                x: temp_data.x, y: temp_data.y, type: 'scatter', mode: 'lines',
+                line: { color: '#4ade80', width: 3 }, name: 'Rate'
+            }], {
+                ...layoutConfig,
+                title: { text: `Rate vs. Temperature (at constant C inputs)`, font: {color: '#4ade80'} },
+                xaxis: { ...layoutConfig.xaxis, title: 'Temperature (°C)' },
+                yaxis: { ...layoutConfig.yaxis, title: 'Reaction Rate (kmol/kg-hr)' }
+            });
+
+            Plotly.react('plot_mtbe', [{
+                x: mtbe_data.x, y: mtbe_data.y, type: 'scatter', mode: 'lines',
+                line: { color: '#fbcfe8', width: 3 }, name: 'Rate'
+            }], {
+                ...layoutConfig,
+                title: { text: `Rate vs. MTBE Concentration (The Inhibition Effect)`, font: {color: '#fbcfe8'} },
+                xaxis: { ...layoutConfig.xaxis, title: 'C<sub>MTBE</sub> (kmol/m³)' },
+                yaxis: { ...layoutConfig.yaxis, title: 'Reaction Rate (kmol/kg-hr)' }
+            });
+
+            if(!graphsInitialized) {
+                let tempDiv = document.getElementById('plot_temp');
+                let isUpdatingTemp = false;
+                
+                tempDiv.on('plotly_relayout', function(eventdata) {
+                    if(isUpdatingTemp) return;
+                    let x0 = 20, x1 = 100;
+                    if(eventdata['xaxis.range[0]'] !== undefined) {
+                        x0 = eventdata['xaxis.range[0]'];
+                        x1 = eventdata['xaxis.range[1]'];
+                    } else if (eventdata['xaxis.autorange']) { x0 = 20; x1 = 100; }
+                    
+                    let newData = generateDataArrays(x0, x1, 800, (t) => calculateKinetics(t + 273.15, C_MeOH, C_iC4, C_MTBE).r_aspen);
+                    isUpdatingTemp = true;
+                    Plotly.update('plot_temp', {x: [newData.x], y: [newData.y]});
+                    isUpdatingTemp = false;
+                });
+
+                let mtbeDiv = document.getElementById('plot_mtbe');
+                let isUpdatingMtbe = false;
+                
+                mtbeDiv.on('plotly_relayout', function(eventdata) {
+                    if(isUpdatingMtbe) return;
+                    let x0 = 0, x1 = 5;
+                    if(eventdata['xaxis.range[0]'] !== undefined) {
+                        x0 = eventdata['xaxis.range[0]'];
+                        x1 = eventdata['xaxis.range[1]'];
+                    } else if (eventdata['xaxis.autorange']) { x0 = 0; x1 = 5; }
+                    
+                    let newData = generateDataArrays(x0, x1, 800, (m) => calculateKinetics(T_K, C_MeOH, C_iC4, m).r_aspen);
+                    isUpdatingMtbe = true;
+                    Plotly.update('plot_mtbe', {x: [newData.x], y: [newData.y]});
+                    isUpdatingMtbe = false;
+                });
+
+                graphsInitialized = true;
+            }
+        }
+
+        updateAll();
+    </script>
+</body>
+</html>
