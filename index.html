@@ -7,6 +7,13 @@
     
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%234ade80' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M8 2v20h8V2H8z'/><path d='M8 6h8'/><path d='M8 10h8'/><path d='M8 14h8'/><path d='M8 18h8'/><path d='M4 14h4'/><path d='M16 6h4'/></svg>">
     
+    <script>
+        MathJax = {
+          tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']]
+          }
+        };
+    </script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
 
@@ -16,7 +23,6 @@
             --text-color: #e0e0e0;
             --accent-green: #4ade80;
             --pastel-pink: #fbcfe8;
-            --pink-hover: #f9a8d4;
             --input-bg: #2d2d2d;
             --scrollbar-gray: #555555;
         }
@@ -48,8 +54,8 @@
         .title-icon { width: 32px; height: 32px; stroke: var(--accent-green); }
         h2 { color: var(--accent-green); margin: 0; text-transform: uppercase; letter-spacing: 3px; font-weight: 900; }
 
-        .tabs { display: flex; border-bottom: 2px solid var(--input-bg); margin-bottom: 20px; }
-        .tab-btn { background: transparent; color: var(--scrollbar-gray); border: none; padding: 10px 20px; font-size: 14px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: all 0.3s; border-bottom: 3px solid transparent; }
+        .tabs { display: flex; border-bottom: 2px solid var(--input-bg); margin-bottom: 20px; flex-wrap: wrap; gap: 5px; }
+        .tab-btn { background: transparent; color: var(--scrollbar-gray); border: none; padding: 10px 15px; font-size: 13px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: all 0.3s; border-bottom: 3px solid transparent; flex-grow: 1; text-align: center;}
         .tab-btn:hover { color: var(--pastel-pink); }
         .tab-btn.active { color: var(--accent-green); border-bottom: 3px solid var(--accent-green); }
 
@@ -72,7 +78,6 @@
         .toggle-btn { background: transparent; border: 1px solid var(--pastel-pink); color: var(--pastel-pink); font-size: 10px; padding: 3px 8px; cursor: pointer; border-radius: 4px; text-transform: uppercase; font-weight: bold; transition: all 0.2s; margin-left: 10px;}
         .toggle-btn:hover { background: var(--pastel-pink); color: var(--bg-color); }
 
-        /* --- TOOLTIP CSS --- */
         .tooltip { position: relative; display: inline-flex; align-items: center; justify-content: center; width: 14px; height: 14px; background-color: transparent; border: 1px solid var(--pastel-pink); color: var(--pastel-pink); border-radius: 4px; font-size: 10px; font-weight: bold; cursor: help; margin-left: 8px; font-family: sans-serif; text-transform: none; letter-spacing: 0; }
         .tooltip.out-tip { border-color: var(--accent-green); color: var(--accent-green); }
         .tooltip .tooltiptext { visibility: hidden; width: 220px; background-color: var(--bg-color); color: #fff; text-align: left; border-radius: 6px; padding: 10px; position: absolute; z-index: 100; bottom: 150%; left: 50%; transform: translateX(-50%); border: 1px solid var(--pastel-pink); font-size: 11px; font-weight: normal; opacity: 0; transition: opacity 0.2s; box-shadow: 0 5px 15px rgba(0,0,0,0.8); line-height: 1.4; pointer-events: none; }
@@ -81,7 +86,6 @@
         .tooltip.out-tip .tooltiptext::after { border-color: var(--accent-green) transparent transparent transparent; }
         .tooltip:hover .tooltiptext { visibility: visible; opacity: 1; }
 
-        /* --- COPYABLE TEXT CSS --- */
         .copyable { cursor: pointer; transition: opacity 0.2s; border-bottom: 1px dashed transparent; display: inline-block;}
         .copyable:hover { opacity: 0.7; border-bottom: 1px dashed currentColor; }
 
@@ -101,16 +105,19 @@
         summary { color: var(--accent-green); font-weight: bold; text-transform: uppercase; font-size: 12px; cursor: pointer; letter-spacing: 1px; outline: none; }
         .math-content { margin-top: 15px; font-size: 14px; color: #ccc; overflow-x: auto; }
 
-        /* ASPEN GUIDE STYLES */
         .aspen-section { margin-bottom: 30px; }
         .aspen-section-title { color: white; border-bottom: 2px solid var(--scrollbar-gray); padding-bottom: 8px; margin-bottom: 15px; font-size: 18px; text-transform: uppercase; letter-spacing: 1px; }
         .aspen-card { background-color: var(--input-bg); padding: 20px; border-radius: 8px; border-left: 4px solid var(--pastel-pink); margin-bottom: 15px;}
-        .aspen-title { color: var(--pastel-pink); font-size: 14px; font-weight: bold; margin-bottom: 10px; text-transform: uppercase;}
-        .aspen-code { font-family: 'Consolas', monospace; color: var(--accent-green); font-size: 13px; margin-bottom: 8px; background: rgba(74, 222, 128, 0.1); padding: 5px 10px; border-radius: 4px; display: inline-block;}
-        .aspen-list { font-size: 13px; color: #e0e0e0; line-height: 1.8; margin-top: 5px; padding-left: 20px; }
-        .aspen-val { color: var(--accent-green); font-weight: bold; }
+        .aspen-title { color: var(--pastel-pink); font-size: 14px; font-weight: bold; margin-bottom: 10px; text-transform: uppercase; border-bottom: 1px solid #444; padding-bottom: 5px;}
+        .aspen-code { font-family: 'Consolas', monospace; color: var(--accent-green); font-size: 13px; margin-bottom: 8px; background: rgba(74, 222, 128, 0.1); padding: 8px 12px; border-radius: 4px; display: inline-block;}
+        .aspen-list { font-size: 13px; color: #e0e0e0; line-height: 1.8; margin-top: 10px; list-style-type: none; padding: 0;}
+        .aspen-list li { margin-bottom: 8px; }
+        .aspen-val { color: var(--accent-green); font-weight: bold; font-family: 'Consolas', monospace; background: #1a1a1a; padding: 2px 6px; border-radius: 4px; border: 1px solid #333;}
         .aspen-instruction { font-size: 13px; color: #ccc; margin-bottom: 10px; line-height: 1.5; }
         .aspen-path { font-family: 'Consolas', monospace; background: #111; padding: 3px 6px; border-radius: 4px; color: var(--pastel-pink); font-size: 12px; }
+
+        .explanation-text { font-size: 14px; color: #ccc; line-height: 1.6; margin-bottom: 15px; }
+        .explanation-highlight { color: white; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -125,6 +132,7 @@
             <button class="tab-btn active" onclick="switchTab('calc')">Point Calculator</button>
             <button class="tab-btn" onclick="switchTab('graphs')">Interactive Graphs</button>
             <button class="tab-btn" onclick="switchTab('aspen')">Detailed Aspen Guide</button>
+            <button class="tab-btn" onclick="switchTab('explain')">Theory & Math Explanation</button>
         </div>
 
         <div id="tab-calc" class="tab-content active">
@@ -132,7 +140,7 @@
                 <div class="input-wrapper">
                     <div class="label-row">
                         <div class="label-left">
-                            <span class="label-text">Temperature</span>
+                            <span class="label-text">Temp</span>
                             <div class="tooltip">?<span class="tooltiptext">The operating temperature at a specific physical point in the reactor. Higher temps increase forward rate (k) but lower equilibrium conversion.</span></div>
                             <button class="toggle-btn" id="unitToggle" onclick="toggleTemp()">Using: °C</button>
                         </div>
@@ -142,32 +150,32 @@
                 <div class="input-wrapper">
                     <div class="label-row">
                         <div class="label-left">
-                            <span class="label-text">C<sub>MeOH</sub></span>
+                            <span class="label-text">C<sub>Methanol</sub></span>
                             <div class="tooltip">?<span class="tooltiptext">The molar concentration of Methanol at this specific point in the catalyst bed. Highly polar; strongly adsorbs to Amberlyst-15 sites.</span></div>
                         </div>
                         <span class="hint">(kmol/m³ or mol/L)</span>
                     </div>
-                    <input type="number" id="c_meoh" class="styled-input" value="1.5" oninput="updateAll()">
+                    <input type="number" id="c_methanol" class="styled-input" value="1.5" oninput="updateAll()">
                 </div>
                 <div class="input-wrapper">
                     <div class="label-row">
                         <div class="label-left">
-                            <span class="label-text">C<sub>iC4</sub></span>
-                            <div class="tooltip">?<span class="tooltiptext">The molar concentration of Isobutene at this exact point in the reactor. Other C4s (like n-butane) are considered inert.</span></div>
+                            <span class="label-text">C<sub>Isobutene</sub></span>
+                            <div class="tooltip">?<span class="tooltiptext">The molar concentration of Isobutene at this exact point in the reactor. Other non-reactive components are considered inert.</span></div>
                         </div>
                         <span class="hint">(kmol/m³ or mol/L)</span>
                     </div>
-                    <input type="number" id="c_ic4" class="styled-input" value="1.5" oninput="updateAll()">
+                    <input type="number" id="c_isobutene" class="styled-input" value="1.5" oninput="updateAll()">
                 </div>
                 <div class="input-wrapper">
                     <div class="label-row">
                         <div class="label-left">
-                            <span class="label-text">C<sub>MTBE</sub></span>
+                            <span class="label-text">C<sub>Methyl tert-butyl ether</sub></span>
                             <div class="tooltip">?<span class="tooltiptext">The concentration of product at this point. As this builds up further down the reactor, it pushes the equilibrium backward.</span></div>
                         </div>
                         <span class="hint">(kmol/m³ or mol/L)</span>
                     </div>
-                    <input type="number" id="c_mtbe" class="styled-input" value="0.2" oninput="updateAll()">
+                    <input type="number" id="c_methyl_tert_butyl_ether" class="styled-input" value="0.2" oninput="updateAll()">
                 </div>
             </div>
 
@@ -191,7 +199,7 @@
                 </div>
                 <div class="output-row">
                     <span class="out-label">Adsorption Ratio (D)
-                        <div class="tooltip out-tip">?<span class="tooltiptext">The lumped parameter accounting for MTBE actively competing with Methanol for physical space on the catalyst sites.</span></div>
+                        <div class="tooltip out-tip">?<span class="tooltiptext">The lumped parameter accounting for Methyl tert-butyl ether actively competing with Methanol for physical space on the catalyst sites.</span></div>
                     </span>
                     <div class="out-value-container">
                         <span class="out-value copyable" id="out_d" onclick="copyVal(this)" title="Click to copy exact standard value">0.0000</span>
@@ -199,7 +207,7 @@
                 </div>
                 <div class="output-row">
                     <span class="out-label">Equilibrium Const (K<sub>eq</sub>)
-                        <div class="tooltip out-tip">?<span class="tooltiptext">The thermodynamic limit of the reaction calculated via Van't Hoff. Because MTBE synthesis is exothermic, Keq drops as temp rises.</span></div>
+                        <div class="tooltip out-tip">?<span class="tooltiptext">The thermodynamic limit of the reaction. Because this synthesis is exothermic, Keq drops as temp rises. This uses the exact A and B liquid-phase inputs.</span></div>
                     </span>
                     <div class="out-value-container">
                         <span class="out-value copyable" id="out_keq" onclick="copyVal(this)" title="Click to copy exact standard value">0.0000</span>
@@ -211,10 +219,11 @@
                 <summary>View Caetano (1994) Mathematical Model</summary>
                 <div class="math-content">
                     <p><strong>Overall Rate (Rideal-Eley):</strong></p>
-                    <p>$$ r = k \frac{C_{iC4} C_{MeOH} - (C_{MTBE} / K_{eq})}{C_{MeOH} + D \cdot C_{MTBE}} $$</p>
-                    <p><strong>Constants (from Caetano 1994):</strong></p>
+                    <p>$$ r = k \frac{C_{\text{Isobutene}} C_{\text{Methanol}} - (C_{\text{Methyl tert-butyl ether}} / K_{eq})}{C_{\text{Methanol}} + D \cdot C_{\text{Methyl tert-butyl ether}}} $$</p>
+                    <p><strong>Constants (from Literature):</strong></p>
                     <p>$$ k = 8.97 \times 10^{20} \exp\left(\frac{-15660}{T}\right) $$</p>
                     <p>$$ D = 1.168 \times 10^{10} \exp\left(\frac{-9241.7}{T}\right) $$</p>
+                    <p>$$ \ln(K_{eq}) = -8.06 + \frac{6820}{T} $$</p>
                 </div>
             </details>
         </div>
@@ -223,73 +232,178 @@
             <p style="font-size: 12px; color: var(--scrollbar-gray); margin-top: 0;">Hover over the plot lines for a vertical trace. <strong>Zoom in by dragging a box over the graph to dynamically generate highly granular data points within that view.</strong> Double-click to zoom out.</p>
             
             <div id="plot_temp" class="graph-container"></div>
-            <div id="plot_mtbe" class="graph-container"></div>
+            <div id="plot_concentration" class="graph-container"></div>
         </div>
 
         <div id="tab-aspen" class="tab-content">
-            <p class="aspen-instruction">This guide details exactly how to map the Caetano (1994) LHHW kinetics for Amberlyst-15 into your Aspen Plus RadFrac column. <em>(Click any green value to copy it to your clipboard)</em>.</p>
+            <p class="aspen-instruction">This layout exactly matches the Aspen Plus LHHW module interface. <em>(Click any green value to copy the exact unformatted number to the clipboard)</em>.</p>
             
             <div class="aspen-section">
-                <div class="aspen-section-title">Phase 1: Global Reaction Setup</div>
-                <p class="aspen-instruction">Navigate to the main Data Browser: <span class="aspen-path">Reactions &rarr; Reactions &rarr; New</span>. Select <strong>LHHW</strong> as the reaction type. Name it <code>MTBE-K</code>.</p>
+                
                 <div class="aspen-card">
-                    <div class="aspen-title">Stoichiometry Tab</div>
+                    <div class="aspen-title">Main Kinetic Window</div>
                     <ul class="aspen-list">
-                        <li><strong>Reactants:</strong> ISOBUT (Coef: -1), METHANOL (Coef: -1)</li>
-                        <li><strong>Products:</strong> MTBE (Coef: 1)</li>
+                        <li><strong>Reacting Phase:</strong> <code>Liquid</code></li>
+                        <li><strong>Rate Basis:</strong> <code>Cat Weight</code></li>
+                        <li><strong>k:</strong> <span class="aspen-val copyable" onclick="copyVal(this)" data-raw="3229200000000000000000000" title="Click to copy">3.2292e+24</span></li>
+                        <li><strong>n:</strong> <span class="aspen-val copyable" onclick="copyVal(this)" data-raw="0" title="Click to copy">0</span></li>
+                        <li><strong>E:</strong> <span class="aspen-val copyable" onclick="copyVal(this)" data-raw="130197240" title="Click to copy">130197240</span> <span style="color:#888;">(J/kmol)</span></li>
+                        <li><strong>T<sub>o</sub>:</strong> <em>Leave blank</em></li>
                     </ul>
+                </div>
+
+                <div class="aspen-card">
+                    <div class="aspen-title">Solids Tab</div>
+                    <ul class="aspen-list">
+                        <li><strong>For liquid or vapor component:</strong> <code>Reacting phase only</code></li>
+                        <li><strong>For solid component:</strong> <code>Solid phase only</code></li>
+                        <li><strong>Solid component found in:</strong> <code>All solid substreams</code></li>
+                    </ul>
+                </div>
+
+                <div class="aspen-card">
+                    <div class="aspen-title">Driving Force Tab</div>
+                    <ul class="aspen-list">
+                        <li><strong>[C<sub>i</sub>] basis:</strong> <code>Molarity</code></li>
+                    </ul>
+                    
+                    <p class="aspen-instruction" style="color:var(--pastel-pink); font-weight:bold; margin-top:15px;">&rarr; Enter term: Term 1 (Forward Reaction)</p>
+                    <ul class="aspen-list">
+                        <li><strong>Concentration exponents for reactants:</strong> METHANOL = <span class="aspen-val copyable" onclick="copyVal(this)" data-raw="1" title="Click to copy">1</span>, ISOBUT = <span class="aspen-val copyable" onclick="copyVal(this)" data-raw="1" title="Click to copy">1</span></li>
+                        <li><strong>Concentration exponents for products:</strong> MTBE = <span class="aspen-val copyable" onclick="copyVal(this)" data-raw="0" title="Click to copy">0</span></li>
+                        <li><strong>Coefficients for driving force constant:</strong>
+                            <div class="tooltip out-tip" style="margin-left: 5px; margin-bottom: 2px;">?<span class="tooltiptext">Setting these coefficients to 0 makes this term's multiplier equal to e^0 = 1. The overall rate constant (k) defined in the main window already calculates the forward reaction's temperature dependence.</span></div><br>
+                            A = <span class="aspen-val copyable" onclick="copyVal(this)" data-raw="0" title="Click to copy">0</span>, 
+                            B = <span class="aspen-val copyable" onclick="copyVal(this)" data-raw="0" title="Click to copy">0</span>, 
+                            C = <span class="aspen-val copyable" onclick="copyVal(this)" data-raw="0" title="Click to copy">0</span>, 
+                            D = <span class="aspen-val copyable" onclick="copyVal(this)" data-raw="0" title="Click to copy">0</span>
+                        </li>
+                    </ul>
+
+                    <p class="aspen-instruction" style="color:var(--pastel-pink); font-weight:bold; margin-top:15px;">&rarr; Enter term: Term 2 (Backward / K<sub>eq</sub>)</p>
+                    <ul class="aspen-list">
+                        <li><strong>Concentration exponents for products:</strong> MTBE = <span class="aspen-val copyable" onclick="copyVal(this)" data-raw="1" title="Click to copy">1</span></li>
+                        <li><strong>Coefficients for driving force constant:</strong> 
+                            A = <span class="aspen-val copyable" onclick="copyVal(this)" data-raw="8.06" title="Click to copy">8.06</span>, 
+                            B = <span class="aspen-val copyable" onclick="copyVal(this)" data-raw="-6820" title="Click to copy">-6820</span>, 
+                            C = <span class="aspen-val copyable" onclick="copyVal(this)" data-raw="0" title="Click to copy">0</span>, 
+                            D = <span class="aspen-val copyable" onclick="copyVal(this)" data-raw="0" title="Click to copy">0</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="aspen-card">
+                    <div class="aspen-title">Adsorption Tab</div>
+                    <ul class="aspen-list">
+                        <li><strong>Adsorption expression exponent:</strong> <span class="aspen-val copyable" onclick="copyVal(this)" data-raw="1" title="Click to copy">1</span></li>
+                    </ul>
+                    
+                    <p class="aspen-instruction" style="margin-top:15px;"><strong>Concentration Exponents Table:</strong></p>
+                    <ul class="aspen-list">
+                        <li>Component <code>METHANOL</code> | Term No. 1: <span class="aspen-val copyable" onclick="copyVal(this)" data-raw="1" title="Click to copy">1</span> | Term No. 2: <span class="aspen-val copyable" onclick="copyVal(this)" data-raw="0" title="Click to copy">0</span></li>
+                        <li>Component <code>MTBE</code> | Term No. 1: <span class="aspen-val copyable" onclick="copyVal(this)" data-raw="0" title="Click to copy">0</span> | Term No. 2: <span class="aspen-val copyable" onclick="copyVal(this)" data-raw="1" title="Click to copy">1</span></li>
+                    </ul>
+
+                    <p class="aspen-instruction" style="margin-top:15px;"><strong>Adsorption Constants Table:</strong></p>
+                    <ul class="aspen-list">
+                        <li><strong>Term No. 1:</strong> 
+                            <div class="tooltip out-tip" style="margin-left: 5px; margin-bottom: 2px;">?<span class="tooltiptext">Setting these coefficients to 0 makes the Methanol adsorption term equal to exactly 1. The Methyl tert-butyl ether adsorption parameter (D) in Term 2 is calculated mathematically relative to this base value.</span></div><br>
+                            A = <span class="aspen-val copyable" onclick="copyVal(this)" data-raw="0" title="Click to copy">0</span>, 
+                            B = <span class="aspen-val copyable" onclick="copyVal(this)" data-raw="0" title="Click to copy">0</span>, 
+                            C = <span class="aspen-val copyable" onclick="copyVal(this)" data-raw="0" title="Click to copy">0</span>, 
+                            D = <span class="aspen-val copyable" onclick="copyVal(this)" data-raw="0" title="Click to copy">0</span>
+                        </li>
+                        <li><strong>Term No. 2:</strong> 
+                            A = <span class="aspen-val copyable" onclick="copyVal(this)" data-raw="23.18091" title="Click to copy">23.18091</span>, 
+                            B = <span class="aspen-val copyable" onclick="copyVal(this)" data-raw="-9241.7" title="Click to copy">-9241.7</span>, 
+                            C = <span class="aspen-val copyable" onclick="copyVal(this)" data-raw="0" title="Click to copy">0</span>, 
+                            D = <span class="aspen-val copyable" onclick="copyVal(this)" data-raw="0" title="Click to copy">0</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+
+        <div id="tab-explain" class="tab-content">
+            
+            <div class="aspen-section">
+                <div class="aspen-section-title">1. Introduction to the LHHW Model</div>
+                <p class="explanation-text">The Langmuir-Hinshelwood-Hougen-Watson (LHHW) model characterizes reactions occurring on solid catalysts, such as an Amberlyst-15 resin. Before molecules can chemically react, they must first adsorb onto an active acid site located on the solid structure.</p>
+                <p class="explanation-text">To model this behavior, the master equation is divided into three distinct physical concepts:</p>
+                
+                <div class="aspen-code" style="display:block; text-align:center; font-size:16px; padding: 15px;">
+                    $$ r = \frac{\text{[Kinetic Factor]} \times \text{[Driving Force]}}{\text{[Adsorption Expression]}} $$
+                </div>
+
+                <ul class="aspen-list" style="margin-top: 15px;">
+                    <li><span class="explanation-highlight">Kinetic Factor:</span> Driven by temperature. Higher temperatures provide molecules with more kinetic energy to overcome the necessary reaction barrier.</li>
+                    <li><span class="explanation-highlight">Driving Force:</span> Evaluates how far the reacting system is from equilibrium. It is the forward progression of reactants minus the backward conversion of products.</li>
+                    <li><span class="explanation-highlight">Adsorption Expression:</span> The denominator models molecules competing for physical space on the catalyst. Because Methanol is highly polar, it strongly occupies these active sites. If excessive Methanol or product accumulates, the active sites become obstructed, the denominator increases, and the overall reaction rate ($r$) slows down.</li>
+                </ul>
+                <p></p>
+            </div>
+
+            <div class="aspen-section">
+                <div class="aspen-section-title">2. Main Kinetic Window Parameters</div>
+                <p class="explanation-text">Aspen Plus calculates the forward kinetic factor utilizing an extended Arrhenius equation format:</p>
+                
+                <div class="aspen-code" style="display:block; text-align:center; font-size:14px; padding: 10px;">
+                    $$ \text{Rate Constant} = k \left(\frac{T}{T_o}\right)^n \exp\left(-\frac{E}{R T}\right) $$
+                </div>
+
+                <ul class="aspen-list" style="margin-top: 15px;">
+                    <li><span class="explanation-highlight">$k$ (Pre-exponential factor):</span> Represents the collision frequency of molecules with the catalyst surface.</li>
+                    <li><span class="explanation-highlight">$n$ (Temperature exponent):</span> Allows for additional temperature dependence of the pre-exponential factor. It is set to $0$ when standard Arrhenius behavior is assumed.</li>
+                    <li><span class="explanation-highlight">$E$ (Activation Energy):</span> The core energy barrier required to trigger the reaction, typically inputted in J/kmol.</li>
+                    <li><span class="explanation-highlight">$T_o$ (Reference Temperature):</span> A reference value required if $n \neq 0$. It is left blank for standard calculations.</li>
+                </ul>
+            </div>
+
+            <div class="aspen-section">
+                <div class="aspen-section-title">3. Driving Force and Adsorption Coefficients</div>
+                <p class="explanation-text">Aspen Plus enforces a specific mathematical structure for both the Driving Force and Adsorption tabs. It multiplies concentration variables by a temperature-dependent modifier ($K_i$), calculated as:</p>
+                
+                <div class="aspen-code" style="display:block; text-align:center; font-size:14px; padding: 10px;">
+                    $$ K_i = \exp\left(A + \frac{B}{T} + C \ln(T) + D \cdot T\right) $$
+                </div>
+
+                <p class="explanation-text" style="margin-top: 15px;">The literature parameters map into this rigid structure through specific transformations:</p>
+                
+                <div class="aspen-card">
+                    <div class="aspen-title">The Zero Coefficient Application</div>
+                    <p class="explanation-text">For the forward reaction (Term 1), the reactants should not be multiplied by an additional variable constant, as the main Kinetic Factor already governs the forward speed. By setting $A, B, C,$ and $D$ all to $0$, Aspen calculates $K_1 = \exp(0) = 1$. The term becomes exactly $1 \times C_{\text{Methanol}} \cdot C_{\text{Isobutene}}$.</p>
+                </div>
+
+                <div class="aspen-card">
+                    <div class="aspen-title">The Inversion for Equilibrium</div>
+                    <p class="explanation-text">Aspen defines the Driving Force as: <code>(Term 1) - (Term 2)</code>. Therefore, Term 2 represents the backward reaction, which must be divided by the equilibrium constant ($1 / K_{eq}$).</p>
+                    <p class="explanation-text">The literature states: $$ \ln(K_{eq}) = -8.06 + \frac{6820}{T} $$</p>
+                    <p class="explanation-text">To divide by $K_{eq}$, the signs must be inverted mathematically:</p>
+                    <div class="aspen-code" style="display:block; text-align:center; padding: 10px;">
+                        $$ \frac{1}{K_{eq}} = \exp\left( -\left(-8.06 + \frac{6820}{T}\right) \right) = \exp\left( 8.06 - \frac{6820}{T} \right) $$
+                    </div>
+                    <p class="explanation-text" style="margin-top: 10px;">This dictates setting $A = 8.06$ and $B = -6820$ in Aspen's Term 2 Driving Force menu.</p>
+                </div>
+
+                <div class="aspen-card">
+                    <div class="aspen-title">The Natural Log Transformation</div>
+                    <p class="explanation-text">The Caetano literature defines the Methyl tert-butyl ether adsorption constant as: $$ \text{Adsorption Ratio} = 1.168 \times 10^{10} \exp\left(\frac{-9241.7}{T}\right) $$</p>
+                    <p class="explanation-text">To fit this into Aspen's $A + B/T$ format, the natural logarithm of the pre-exponential factor is calculated:</p>
+                    <div class="aspen-code" style="display:block; text-align:center; padding: 10px;">
+                        $$ A = \ln(1.168 \times 10^{10}) = 23.1809 $$
+                    </div>
+                    <p class="explanation-text" style="margin-top: 10px;">Therefore, $A = 23.1809$ and $B = -9241.7$ are used in the Adsorption Term 2 menu.</p>
                 </div>
             </div>
 
             <div class="aspen-section">
-                <div class="aspen-section-title">Phase 2: LHHW Kinetic Configuration</div>
-                <p class="aspen-instruction">Navigate to <span class="aspen-path">Reactions &rarr; MTBE-K &rarr; Edit</span>. You must configure three specific tabs.</p>
-
-                <div class="aspen-card">
-                    <div class="aspen-title">1. Kinetic Tab (Forward Rate)</div>
-                    <p class="aspen-instruction">Set <strong>Reacting Phase</strong> to <code>Liquid</code> and <strong>Rate Basis</strong> to <code>Cat Weight</code>.</p>
-                    <div class="aspen-code">k = A &middot; exp(-E<sub>a</sub> / RT)</div>
-                    <ul class="aspen-list">
-                        <li><strong>k (Pre-exponential factor):</strong> <span class="aspen-val copyable" onclick="copyVal(this)" data-raw="897000000000000000000" title="Click to copy">8.97e+20</span></li>
-                        <li><strong>E<sub>a</sub> (Activation Energy):</strong> <span class="aspen-val copyable" onclick="copyVal(this)" data-raw="130200000" title="Click to copy">130200000</span> <span style="color:#888;">J/kmol</span> <em style="color:#666;">(15660 &times; 8.314 &times; 1000)</em></li>
-                    </ul>
-                </div>
-
-                <div class="aspen-card">
-                    <div class="aspen-title">2. Driving Force Tab (Numerator)</div>
-                    <p class="aspen-instruction">Set the <strong>Concentration Basis</strong> to <code>Molarity</code> (which translates to kmol/m&sup3;). Add two terms:</p>
-                    <div class="aspen-code">Term 1: [MeOH]<sup>1</sup> &middot; [iC4]<sup>1</sup></div>
-                    <div class="aspen-code">Term 2: [MTBE]<sup>1</sup> / K<sub>eq</sub></div>
-                    <ul class="aspen-list">
-                        <li>Select "Compute Keq from Gibbs free energy" so Aspen handles the thermodynamics natively.</li>
-                    </ul>
-                </div>
-
-                <div class="aspen-card">
-                    <div class="aspen-title">3. Adsorption Tab (Denominator)</div>
-                    <p class="aspen-instruction">Here you build the inhibition effect of Methanol and MTBE competing for the Amberlyst-15 active sites.</p>
-                    <div class="aspen-code">Denom = ( [MeOH] + D &middot; [MTBE] )<sup>1</sup></div>
-                    <ul class="aspen-list">
-                        <li><strong>Adsorption Exponent:</strong> <span class="aspen-val copyable" onclick="copyVal(this)" data-raw="1" title="Click to copy">1</span></li>
-                        <li><strong>Term 1 (MeOH):</strong> Add component METHANOL. Pre-exp = <span class="aspen-val copyable" onclick="copyVal(this)" data-raw="1" title="Click to copy">1</span>, E<sub>a</sub> = <span class="aspen-val copyable" onclick="copyVal(this)" data-raw="0" title="Click to copy">0</span></li>
-                        <li><strong>Term 2 (MTBE, "D"):</strong> Add component MTBE. Pre-exp = <span class="aspen-val copyable" onclick="copyVal(this)" data-raw="11680000000" title="Click to copy">1.168e+10</span>, E<sub>a</sub> = <span class="aspen-val copyable" onclick="copyVal(this)" data-raw="76835000" title="Click to copy">76835000</span> <span style="color:#888;">J/kmol</span> <em style="color:#666;">(9241.7 &times; 8.314 &times; 1000)</em></li>
-                    </ul>
-                </div>
+                <div class="aspen-section-title">4. The Point Calculation Application</div>
+                <p class="explanation-text">Within a reactive distillation column, the temperature and chemical concentrations change continuously from the upper sections down to the bottom reboiler.</p>
+                <p class="explanation-text">A "Point Calculation" analyzes a single, microscopic slice of the catalyst bed. It calculates the instantaneous reaction speed ($r$) precisely where specific local temperatures and local concentrations exist.</p>
+                <p class="explanation-text">During a simulation, Aspen Plus evaluates this instantaneous rate at thousands of different points across the reactive stages, multiplying each point's local rate by the defined Catalyst Holdup (kg) to compute the total product synthesized.</p>
             </div>
 
-            <div class="aspen-section">
-                <div class="aspen-section-title">Phase 3: RadFrac Column Integration</div>
-                <p class="aspen-instruction">Now apply this mathematical catalyst "fingerprint" to the physical space in your column.</p>
-                <div class="aspen-card">
-                    <div class="aspen-title">Catalyst Holdup Configuration</div>
-                    <p class="aspen-instruction">Navigate to <span class="aspen-path">Blocks &rarr; DISP &rarr; Reactions</span>.</p>
-                    <ul class="aspen-list">
-                        <li>Select <strong>Stages 4 through 11</strong> (your reactive zone).</li>
-                        <li>Attach the <code>MTBE-K</code> reaction ID you just built to these stages.</li>
-                        <li><strong>CRITICAL STEP:</strong> In the grid, locate the <strong>Holdup</strong> column. You must input the mass of Amberlyst-15 catalyst present on each stage in <strong>kg</strong>. Aspen multiplies the LHHW rate (kmol/kg-hr) by this holdup to determine the actual amount of MTBE synthesized per stage.</li>
-                    </ul>
-                </div>
-            </div>
         </div>
 
     </div>
@@ -337,14 +451,14 @@
             updateAll();
         }
 
-        function calculateKinetics(T_kelvin, C_MeOH, C_iC4, C_MTBE) {
+        function calculateKinetics(T_kelvin, C_Methanol, C_Isobutene, C_Methyl_tert_butyl_ether) {
             const k = 8.97e20 * Math.exp(-15660 / T_kelvin);
             const D = 1.168e10 * Math.exp(-9241.7 / T_kelvin);
-            const dH_R = -37700 / 8.314; 
-            const K_eq = 3.2 * Math.exp(dH_R * ((1/T_kelvin) - (1/343.15)));
+            
+            const K_eq = Math.exp(-8.06 + (6820 / T_kelvin));
 
-            const numerator = (C_iC4 * C_MeOH) - (C_MTBE / K_eq);
-            const denominator = C_MeOH + (D * C_MTBE);
+            const numerator = (C_Isobutene * C_Methanol) - (C_Methyl_tert_butyl_ether / K_eq);
+            const denominator = C_Methanol + (D * C_Methyl_tert_butyl_ether);
             
             let r_raw = 0;
             if (denominator > 0) r_raw = k * (numerator / denominator);
@@ -355,14 +469,14 @@
 
         function updateAll() {
             let T_input = parseFloat(document.getElementById('temp').value);
-            const C_MeOH = parseFloat(document.getElementById('c_meoh').value);
-            const C_iC4 = parseFloat(document.getElementById('c_ic4').value);
-            const C_MTBE = parseFloat(document.getElementById('c_mtbe').value);
+            const C_Methanol = parseFloat(document.getElementById('c_methanol').value);
+            const C_Isobutene = parseFloat(document.getElementById('c_isobutene').value);
+            const C_Methyl_tert_butyl_ether = parseFloat(document.getElementById('c_methyl_tert_butyl_ether').value);
 
-            if (isNaN(T_input) || isNaN(C_MeOH) || isNaN(C_iC4) || isNaN(C_MTBE)) return;
+            if (isNaN(T_input) || isNaN(C_Methanol) || isNaN(C_Isobutene) || isNaN(C_Methyl_tert_butyl_ether)) return;
             const T_K = isCelsius ? T_input + 273.15 : T_input;
 
-            const pointCalc = calculateKinetics(T_K, C_MeOH, C_iC4, C_MTBE);
+            const pointCalc = calculateKinetics(T_K, C_Methanol, C_Isobutene, C_Methyl_tert_butyl_ether);
             
             const elR = document.getElementById('out_r_aspen');
             elR.innerText = pointCalc.r_aspen.toExponential(4);
@@ -380,7 +494,7 @@
             elKeq.innerText = pointCalc.K_eq.toFixed(4);
             elKeq.setAttribute('data-raw', pointCalc.K_eq);
 
-            generateGraphs(T_K, C_MeOH, C_iC4, C_MTBE);
+            generateGraphs(T_K, C_Methanol, C_Isobutene, C_Methyl_tert_butyl_ether);
         }
 
         function copyVal(element) {
@@ -391,14 +505,15 @@
 
             navigator.clipboard.writeText(formattedVal).then(() => {
                 const originalText = element.innerText;
-                const originalColor = element.style.color;
                 
                 element.innerText = "COPIED!";
-                element.style.color = "var(--text-color)";
+                element.style.color = "var(--bg-color)";
+                element.style.background = "var(--accent-green)";
                 
                 setTimeout(() => {
                     element.innerText = originalText;
-                    element.style.color = originalColor;
+                    element.style.color = "";
+                    element.style.background = "";
                 }, 800);
             });
         }
@@ -414,11 +529,11 @@
             return {x: x_arr, y: y_arr};
         }
 
-        function generateGraphs(T_K, C_MeOH, C_iC4, C_MTBE) {
+        function generateGraphs(T_K, C_Methanol, C_Isobutene, C_Methyl_tert_butyl_ether) {
             if (!document.getElementById('tab-graphs').classList.contains('active')) return;
 
-            let temp_data = generateDataArrays(20, 100, 800, (t) => calculateKinetics(t + 273.15, C_MeOH, C_iC4, C_MTBE).r_aspen);
-            let mtbe_data = generateDataArrays(0, 5, 800, (m) => calculateKinetics(T_K, C_MeOH, C_iC4, m).r_aspen);
+            let temp_data = generateDataArrays(20, 100, 800, (t) => calculateKinetics(t + 273.15, C_Methanol, C_Isobutene, C_Methyl_tert_butyl_ether).r_aspen);
+            let concentration_data = generateDataArrays(0, 5, 800, (m) => calculateKinetics(T_K, C_Methanol, C_Isobutene, m).r_aspen);
 
             Plotly.react('plot_temp', [{
                 x: temp_data.x, y: temp_data.y, type: 'scatter', mode: 'lines',
@@ -430,13 +545,13 @@
                 yaxis: { ...layoutConfig.yaxis, title: 'Reaction Rate (kmol/kg-hr)' }
             });
 
-            Plotly.react('plot_mtbe', [{
-                x: mtbe_data.x, y: mtbe_data.y, type: 'scatter', mode: 'lines',
+            Plotly.react('plot_concentration', [{
+                x: concentration_data.x, y: concentration_data.y, type: 'scatter', mode: 'lines',
                 line: { color: '#fbcfe8', width: 3 }, name: 'Rate'
             }], {
                 ...layoutConfig,
-                title: { text: `Rate vs. MTBE Concentration (The Inhibition Effect)`, font: {color: '#fbcfe8'} },
-                xaxis: { ...layoutConfig.xaxis, title: 'C<sub>MTBE</sub> (kmol/m³)' },
+                title: { text: `Rate vs. Methyl tert-butyl ether Concentration (The Inhibition Effect)`, font: {color: '#fbcfe8'} },
+                xaxis: { ...layoutConfig.xaxis, title: 'C<sub>Methyl tert-butyl ether</sub> (kmol/m³)' },
                 yaxis: { ...layoutConfig.yaxis, title: 'Reaction Rate (kmol/kg-hr)' }
             });
 
@@ -452,27 +567,27 @@
                         x1 = eventdata['xaxis.range[1]'];
                     } else if (eventdata['xaxis.autorange']) { x0 = 20; x1 = 100; }
                     
-                    let newData = generateDataArrays(x0, x1, 800, (t) => calculateKinetics(t + 273.15, C_MeOH, C_iC4, C_MTBE).r_aspen);
+                    let newData = generateDataArrays(x0, x1, 800, (t) => calculateKinetics(t + 273.15, C_Methanol, C_Isobutene, C_Methyl_tert_butyl_ether).r_aspen);
                     isUpdatingTemp = true;
                     Plotly.update('plot_temp', {x: [newData.x], y: [newData.y]});
                     isUpdatingTemp = false;
                 });
 
-                let mtbeDiv = document.getElementById('plot_mtbe');
-                let isUpdatingMtbe = false;
+                let concentrationDiv = document.getElementById('plot_concentration');
+                let isUpdatingConcentration = false;
                 
-                mtbeDiv.on('plotly_relayout', function(eventdata) {
-                    if(isUpdatingMtbe) return;
+                concentrationDiv.on('plotly_relayout', function(eventdata) {
+                    if(isUpdatingConcentration) return;
                     let x0 = 0, x1 = 5;
                     if(eventdata['xaxis.range[0]'] !== undefined) {
                         x0 = eventdata['xaxis.range[0]'];
                         x1 = eventdata['xaxis.range[1]'];
                     } else if (eventdata['xaxis.autorange']) { x0 = 0; x1 = 5; }
                     
-                    let newData = generateDataArrays(x0, x1, 800, (m) => calculateKinetics(T_K, C_MeOH, C_iC4, m).r_aspen);
-                    isUpdatingMtbe = true;
-                    Plotly.update('plot_mtbe', {x: [newData.x], y: [newData.y]});
-                    isUpdatingMtbe = false;
+                    let newData = generateDataArrays(x0, x1, 800, (m) => calculateKinetics(T_K, C_Methanol, C_Isobutene, m).r_aspen);
+                    isUpdatingConcentration = true;
+                    Plotly.update('plot_concentration', {x: [newData.x], y: [newData.y]});
+                    isUpdatingConcentration = false;
                 });
 
                 graphsInitialized = true;
